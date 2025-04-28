@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class VPNGUI {
-    private VPNClient client = new VPNClient();
+    private final VPNClient client = new VPNClient();
 
     public void launch() {
         JFrame frame = new JFrame("VPN Client");
@@ -13,9 +13,13 @@ public class VPNGUI {
         JButton connectButton = new JButton("Connect");
         JTextField messageField = new JTextField(20);
         JButton sendButton = new JButton("Send");
+        sendButton.setEnabled(false); // Initially disabled
+
         connectButton.addActionListener(e -> {
             try {
                 client.connect(VPNConfig.SERVER_IP, VPNConfig.SERVER_PORT);
+                connectButton.setEnabled(false); // Disable after connect
+                sendButton.setEnabled(true);     // Enable send after connection
             } catch (Exception ex) {
                 VPNLogger.log("Connection failed: " + ex.getMessage());
             }
