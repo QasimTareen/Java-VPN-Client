@@ -1,59 +1,43 @@
 package vpn;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 
 public class VPNClient {
-    public static void main(String[] args) {
-        VPNClient client1 = new VPNClient();
-        client1.G_u_I();
-    }
+    private Socket soc;
+    private InputStream in;
+    private OutputStream ou;
 
-    public void G_u_I()
+    public void connect (String serverIP , int serverPort) throws Exception
     {
-        JFrame frame = new JFrame("VPN CLIENT ");
-        frame.setSize(300,200);
-        frame.setLayout(new FlowLayout());
+        soc = new Socket(serverIP,serverPort);
+        in=soc.getInputStream();
+        ou=soc.getOutputStream();
+        VPNLogger.log("Connected to server ");
 
-        JLabel label = new JLabel("Enter the VPN Server ID : ");
-        JTextField serverField = new JTextField(20);
-        JButton connectButton = new JButton("Connect");
-        JLabel statusLabel = new JLabel("Status : Not Connected :( ");
-
-        connectButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String server_IP = serverField.getText();
-                if(!server_IP.isEmpty())
-                {
-                    statusLabel.setText("Status: Connected to "+server_IP);
-                    VPNLogManager.log("Connected to server : "+server_IP);
-                }
-                else
-                {
-                    statusLabel.setText("status : No IP Detected/Entered ");
-                    VPNLogManager.log("No IP Entered ");
-                }
+        new Thread(this::receiveData).start();
+    }
+    public void receiveData()
+    {
+        try
+        {
+            byte[] buffer = new byte[4096];
+            int bytes_read;
+            while ((bytes_read = in.read(buffer)) != -1)
+            {
+                byte[] decrypted = Utils.decrypt(buffer,bytes_read);
+                VPNLogger.log("Received : "+new String(decrypted));
             }
-        });
-
-        frame.add(label);
-        frame.add(serverField);
-        frame.add(connectButton);
-        frame.add(statusLabel);
-
-        frame.setVisible(true);
+        } catch (Exception e) {
+           VPNLogger.log("Connection closed ");
+        }
     }
 
-    public void connect() {
-        System.out.println(" Connecting to VPN... ");
-        VPNLogManager.log("Connecting to VPN .... ");
-    }
-
-    public void disconnect() {
-        System.out.println("Disconnecting from the VPN .... ");
-        VPNLogManager.log("Disconnecting from VPN ... ");
+    public void sendData(String message) throws Exception
+    {
+        byte[] encrypted = Utils.encrypt(message.getBytes());
+        ou.write(encrypted);
+        ou.flush();
     }
 }
