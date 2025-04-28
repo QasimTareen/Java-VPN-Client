@@ -13,13 +13,13 @@ public class VPNGUI {
         JButton connectButton = new JButton("Connect");
         JTextField messageField = new JTextField(20);
         JButton sendButton = new JButton("Send");
-        sendButton.setEnabled(false); // Initially disabled
+        sendButton.setEnabled(false);
 
         connectButton.addActionListener(e -> {
             try {
                 client.connect(VPNConfig.SERVER_IP, VPNConfig.SERVER_PORT);
-                connectButton.setEnabled(false); // Disable after connect
-                sendButton.setEnabled(true);     // Enable send after connection
+                connectButton.setEnabled(false);
+                sendButton.setEnabled(true);
             } catch (Exception ex) {
                 VPNLogger.log("Connection failed: " + ex.getMessage());
             }
