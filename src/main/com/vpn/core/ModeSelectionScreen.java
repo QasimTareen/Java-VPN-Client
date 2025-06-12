@@ -6,7 +6,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import com.vpn.auth.Authenticator;
@@ -27,9 +26,7 @@ public class ModeSelectionScreen {
         Button guestModeButton = new Button("Guest Mode");
         styleButton(guestModeButton);
 
-        // Sign-in logic
         signInButton.setOnAction(e -> showLoginDialog(primaryStage));
-
         guestModeButton.setOnAction(e ->
                 primaryStage.setScene(MainInterfaceScreen.createMainScene(primaryStage, "GUEST"))
         );
@@ -53,30 +50,42 @@ public class ModeSelectionScreen {
     private static void showLoginDialog(Stage primaryStage) {
         Dialog<String[]> dialog = new Dialog<>();
         dialog.setTitle("Sign In");
-        dialog.setHeaderText("Enter VPN credentials:");
+        dialog.setHeaderText(null);
 
-        // Set the button types
         ButtonType loginButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
-        // Create username and password fields
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setAlignment(Pos.CENTER);
+        // Load background and logo
+        ImageView backgroundView = new ImageView(new Image("assets/background-4.jpg"));
+        backgroundView.setFitWidth(400);
+        backgroundView.setFitHeight(300);
 
+        ImageView logoView = new ImageView(new Image("assets/login.jpg"));
+        logoView.setFitHeight(80);
+        logoView.setPreserveRatio(true);
+
+        // Fields
         TextField usernameField = new TextField();
         usernameField.setPromptText("Username");
 
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Password");
 
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setAlignment(Pos.CENTER);
         grid.add(new Label("Username:"), 0, 0);
         grid.add(usernameField, 1, 0);
         grid.add(new Label("Password:"), 0, 1);
         grid.add(passwordField, 1, 1);
 
-        dialog.getDialogPane().setContent(grid);
+        VBox contentBox = new VBox(20, logoView, grid);
+        contentBox.setAlignment(Pos.CENTER);
+        contentBox.setPrefSize(400, 300);
+
+        StackPane layeredPane = new StackPane(backgroundView, contentBox);
+        dialog.getDialogPane().setContent(layeredPane);
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {
