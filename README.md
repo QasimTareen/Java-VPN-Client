@@ -32,30 +32,31 @@ A modern, Java-based OpenVPN desktop client built using **JavaFX** with support 
 
 ## 📁 Project Structure
 
-## Java-VPN-Client/
-│
-├── src/
-│ ├── main/
-│ │ ├── java/vpn/core/
-│ │ │ ├── VPNClient.java
-│ │ │ ├── VPNGUIApp.java
-│ │ │ ├── Authenticator.java
-│ │ │ ├── VPNServer.java
-│ │ │ ├── ServerLocation.java
-│ │ │ ├── screens/
-│ │ │ │ ├── WelcomeScreen.java
-│ │ │ │ ├── ModeSelectionScreen.java
-│ │ │ │ ├── MainInterfaceScreen.java
-│ ├── resources/
-│ │ ├── ovpn/
-│ │ │ ├── us178_tcp80.ovpn
-│ │ │ ├── de220_tcp443.ovpn
-│ │ │ ├── credentials.txt
-│ │ ├── assets/
-│ │ │ ├── background-1.jpg
-│ │ │ ├── background-2.avif
-│ │ │ ├── background-3.jpg
-│ │ │ ├── vpn.png
+The project is organized into clear, modular components:
+
+### 🧠 Core Java Classes (`src/main/java/vpn/core/`)
+- `VPNClient.java` – Manages OpenVPN connection and process execution.
+- `Authenticator.java` – Validates user login with stored credentials.
+- `VPNServer.java` – Represents individual VPN server data.
+- `ServerLocation.java` – Holds a list of available server options.
+- `VPNGUIApp.java` – Entry point of the GUI application and screen controller.
+
+### 💻 GUI Screens (`src/main/java/vpn/core/screens/`)
+- `WelcomeScreen.java` – Initial welcome interface with logo and "Get Started" button.
+- `ModeSelectionScreen.java` – Offers Sign-in and Guest Mode options.
+- `MainInterfaceScreen.java` – Displays Connect/Disconnect toggle, server list, and back navigation.
+
+### 📦 Resources (`src/main/resources/`)
+- `ovpn/`
+  - `.ovpn` files (e.g., `us178_tcp80.ovpn`, `de220_tcp443.ovpn`) – VPN configuration profiles.
+  - `credentials.txt` – Stores username and password for Sign-in users.
+  
+- `assets/`
+  - `vpn.png` – Logo displayed in welcome screen.
+  - `background-1.jpg` – Background for the welcome screen.
+  - `background-2.avif` – Background for mode selection screen.
+  - `background-3.jpg` – Background for the main VPN interface.
+
 
 
 ---
