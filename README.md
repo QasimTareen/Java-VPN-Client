@@ -2,7 +2,6 @@
 
 A modern, Java-based OpenVPN desktop client built using **JavaFX** with support for multiple servers, authentication, guest mode, dynamic UI, and seamless VPN connectivity.
 
-![VPN Logo](resources/assets/vpn.png)
 
 ## 🚀 Features
 
