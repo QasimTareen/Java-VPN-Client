@@ -32,7 +32,7 @@ A modern, Java-based OpenVPN desktop client built using **JavaFX** with support 
 
 ## 📁 Project Structure
 
-Java-VPN-Client/
+## Java-VPN-Client/
 │
 ├── src/
 │ ├── main/
