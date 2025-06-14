@@ -19,7 +19,6 @@ public class ModeSelectionScreen {
         backgroundView.setFitWidth(600);
         backgroundView.setFitHeight(400);
 
-        // Buttons
         Button signInButton = new Button("Sign In");
         styleButton(signInButton);
 
@@ -55,7 +54,6 @@ public class ModeSelectionScreen {
         ButtonType loginButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
-        // Load background and logo
         ImageView backgroundView = new ImageView(new Image("assets/background-4.jpg"));
         backgroundView.setFitWidth(400);
         backgroundView.setFitHeight(300);
@@ -64,7 +62,6 @@ public class ModeSelectionScreen {
         logoView.setFitHeight(80);
         logoView.setPreserveRatio(true);
 
-        // Fields
         TextField usernameField = new TextField();
         usernameField.setPromptText("Username");
 

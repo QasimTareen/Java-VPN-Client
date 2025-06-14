@@ -3,20 +3,22 @@ package com.vpn.core;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.*;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 class MainInterfaceScreen {
 
@@ -28,40 +30,42 @@ class MainInterfaceScreen {
         backgroundView.setFitWidth(600);
         backgroundView.setFitHeight(400);
 
-        // Toggle Button Design
-        ToggleButton toggleButton = new ToggleButton("Connect");
-        toggleButton.setFont(Font.font("Arial", 18));
-        toggleButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 30px;");
-        toggleButton.setPrefWidth(180);
-        toggleButton.setPrefHeight(50);
 
-        toggleButton.setOnMouseEntered(e ->
-                toggleButton.setStyle("-fx-background-color: #c0392b; -fx-text-fill: white; -fx-background-radius: 30px;")
-        );
-        toggleButton.setOnMouseExited(e ->
-                toggleButton.setStyle(toggleButton.isSelected()
-                        ? "-fx-background-color: #27ae60; -fx-text-fill: white; -fx-background-radius: 30px;"
-                        : "-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 30px;")
-        );
+        Button backButton = new Button("← Back");
+        backButton.setFont(Font.font(14));
+        backButton.setStyle("-fx-background-color: #34495e; -fx-text-fill: white; -fx-background-radius: 10;");
+        backButton.setOnMouseEntered(e -> backButton.setStyle("-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-background-radius: 10;"));
+        backButton.setOnMouseExited(e -> backButton.setStyle("-fx-background-color: #34495e; -fx-text-fill: white; -fx-background-radius: 10;"));
+        backButton.setOnAction(e -> stage.setScene(ModeSelectionScreen.createModeSelectionScene(stage)));
 
-        // Server List with Animation
+
+        HBox backBox = new HBox(backButton);
+        backBox.setAlignment(Pos.TOP_LEFT);
+        backBox.setPadding(new Insets(10));
+
+
+        Map<String, String> serverMap = new LinkedHashMap<>();
+        if (mode.equals("SIGN_IN")) {
+            serverMap.put("Canada", "vpnbook-ca196-udp53.ovpn");
+            serverMap.put("Germany", "vpnbook-de220-tcp443.ovpn");
+            serverMap.put("Poland", "vpnbook-pl140-udp25000.ovpn");
+            serverMap.put("United States", "vpnbook-us178-tcp80.ovpn");
+        } else {
+            serverMap.put("United States", "vpnbook-us178-tcp80.ovpn");
+        }
+
         ComboBox<String> serverList = new ComboBox<>();
-        List<String> servers = mode.equals("SIGN_IN")
-                ? List.of("vpnbook-ca196-udp53.ovpn", "vpnbook-de220-tcp443.ovpn", "vpnbook-pl140-udp25000.ovpn", "vpnbook-us178-tcp80.ovpn")
-                : List.of("vpnbook-us178-tcp80.ovpn");
-
-        serverList.setItems(FXCollections.observableArrayList(servers));
+        serverList.setItems(FXCollections.observableArrayList(serverMap.keySet()));
         serverList.getSelectionModel().selectFirst();
         serverList.setStyle("-fx-background-radius: 10; -fx-font-size: 14px;");
         serverList.setPrefWidth(300);
 
-        // Fade animation
+        // Animation on combo box
         FadeTransition fadeIn = new FadeTransition(Duration.millis(1000), serverList);
         fadeIn.setFromValue(0.0);
         fadeIn.setToValue(1.0);
         fadeIn.play();
 
-        // Scale on hover
         serverList.setOnMouseEntered(e -> {
             ScaleTransition scaleUp = new ScaleTransition(Duration.millis(200), serverList);
             scaleUp.setToX(1.05);
@@ -76,10 +80,28 @@ class MainInterfaceScreen {
             scaleDown.play();
         });
 
+        ToggleButton toggleButton = new ToggleButton("Connect");
+        toggleButton.setFont(Font.font("Arial", 18));
+        toggleButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 30px;");
+        toggleButton.setPrefWidth(180);
+        toggleButton.setPrefHeight(50);
+
+        toggleButton.setOnMouseEntered(e ->
+                toggleButton.setStyle("-fx-background-color: #c0392b; -fx-text-fill: white; -fx-background-radius: 30px;")
+        );
+
+        toggleButton.setOnMouseExited(e ->
+                toggleButton.setStyle(toggleButton.isSelected()
+                        ? "-fx-background-color: #27ae60; -fx-text-fill: white; -fx-background-radius: 30px;"
+                        : "-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 30px;")
+        );
+
         toggleButton.setOnAction(e -> {
             try {
-                String selectedServer = serverList.getValue();
-                File ovpnFile = copyResourceToTempFile("/ovpn/" + selectedServer);
+                String selectedCountry = serverList.getValue();
+                String selectedOvpnFile = serverMap.get(selectedCountry);
+
+                File ovpnFile = copyResourceToTempFile("/ovpn/" + selectedOvpnFile);
                 File credentialsFile = copyResourceToTempFile("/ovpn/credentials.txt");
 
                 if (toggleButton.isSelected()) {
@@ -91,15 +113,20 @@ class MainInterfaceScreen {
                     toggleButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 30px;");
                     vpnClient.disconnectVPN();
                 }
+
             } catch (Exception ex) {
-                ex.printStackTrace(); // Replace with ErrorHandler if needed
+                ex.printStackTrace(); // You can hook up ErrorHandler here
             }
         });
 
         VBox content = new VBox(30, serverList, toggleButton);
         content.setAlignment(Pos.CENTER);
 
-        StackPane root = new StackPane(backgroundView, content);
+        BorderPane layout = new BorderPane();
+        layout.setTop(backBox);
+        layout.setCenter(content);
+
+        StackPane root = new StackPane(backgroundView, layout);
         return new Scene(root, 600, 400);
     }
 
