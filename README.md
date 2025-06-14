@@ -108,3 +108,9 @@ mvn clean install
 java -jar target/Java-VPN-Client.jar
 
 ## ⚠️ Ensure OpenVPN is installed and the config files (.ovpn) are correctly mapped in the code.
+
+
+## 📽️ Demo
+
+🎥 [Watch the VPN Project Demo Video on YouTube](https://youtu.be/mpaXi_tuYV4)
+
