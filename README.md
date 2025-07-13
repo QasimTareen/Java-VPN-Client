@@ -79,6 +79,7 @@ Integrated OpenVPN configuration files:
 
 All configurations are placed inside `resources/ovpn/`.
 
+
 ---
 
 ## 📽️ Working Screens (UI Flow)
@@ -98,6 +99,30 @@ _(Screenshots Placeholder - Add your actual UI screenshots here)_
 - Java 17+
 - Maven
 - OpenVPN installed and added to PATH
+
+---
+
+## ⚠️ VPN Login Issue – AUTH_FAILED
+
+If your VPN connection fails with an `AUTH_FAILED` error, it's most likely due to **expired or outdated login credentials**.
+
+VPNBook frequently updates their public VPN passwords. To ensure successful connection:
+
+### 🔧 How to Fix
+
+1. Open the file located at:  
+   `src/main/resources/ovpn/credentials.txt`
+
+2. Replace the existing password with the **latest one** provided by VPNBook.
+
+3. You can find the most recent username and password here:  
+   👉 [https://www.vpnbook.com/freevpn](https://www.vpnbook.com/freevpn)
+
+4. Save the file and **restart** the application.
+
+### 📌 Example (`credentials.txt`):
+
+---
 
 ### 🔧 Build & Run
 
